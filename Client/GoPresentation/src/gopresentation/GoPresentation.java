@@ -1,21 +1,32 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gopresentation;
 
+import javax.swing.JFrame;
+
 /**
- *
  * @author Lucas
  */
-public class GoPresentation {
+public class GoPresentation extends JFrame {
+    
+    private static GoPresentation instance = null;
+    private GoPresentation(){
+        setSize(600, 450);
+        setTitle("Go Presentation");
+    }
+    
+    public static synchronized GoPresentation getInstance(){
+        if(instance == null){
+            instance = new GoPresentation();
+        }
+        return instance;
+    }
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        // TODO code application logic here
+        GoPresentation mainWindow = GoPresentation.getInstance();
+        mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainWindow.setLocation(400, 200);
+        mainWindow.setVisible(true);
+       
     }
     
 }
