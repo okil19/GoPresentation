@@ -24,6 +24,7 @@ public class GoPresentation extends JFrame implements ActionListener {
     public JPanel panel;
     public JLabel label;
     public JButton uploadButton;
+    public JButton sendButton;
     public FileDialog uploadFile;
     public JTextField filePath;
     
@@ -33,18 +34,23 @@ public class GoPresentation extends JFrame implements ActionListener {
         
         label = new JLabel("Select file to upload:");
         uploadButton = new JButton("Upload");
+        sendButton = new JButton("Send to TV");
         filePath = new JTextField();
         
         label.setBounds(10, 10, 150, 25);
         uploadButton.setBounds(160, 10, 80, 20);
-        filePath.setBounds(10, 40, 350, 20);
+        sendButton.setBounds(535, 10, 150, 20);
+        filePath.setBounds(10, 40, 675, 20);
         
         uploadButton.addActionListener(this);
         
         panel.add(label);
         panel.add(uploadButton);
+        panel.add(sendButton);
         panel.add(filePath);
+        
         filePath.setEditable(false);
+        sendButton.setEnabled(false);
         
         Container container = getContentPane();
         container.add(panel);
@@ -73,9 +79,11 @@ public class GoPresentation extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if(source == uploadButton){
-            uploadFile = new FileDialog(instance, "Wczytaj",FileDialog.LOAD);
+            uploadFile = new FileDialog(instance, "Open file...",FileDialog.LOAD);
             uploadFile.setBounds(180, 10, 50, 25);
             uploadFile.setVisible(true);
+            
+            filePath.setText(uploadFile.getDirectory() + uploadFile.getFile());
         }
     }
     
