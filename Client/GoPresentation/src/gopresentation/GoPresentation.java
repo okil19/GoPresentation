@@ -23,6 +23,11 @@ import javax.swing.JTextField;
 public class GoPresentation extends JFrame implements ActionListener {
     
     private static GoPresentation instance = null;
+    public JMenuBar menuBar;
+    public JMenuItem fileCloseItem;
+    public JMenuItem helpAboutItem;
+    public JMenu fileTab;
+    public JMenu helpTab;
     public JPanel panel;
     public JLabel label;
     public JButton selectFileButton;
@@ -41,6 +46,11 @@ public class GoPresentation extends JFrame implements ActionListener {
         panel = new JPanel();
         panel.setLayout(null);
         
+        menuBar = new JMenuBar();
+        fileTab = new JMenu("File");
+        helpTab = new JMenu("Help");
+        fileCloseItem = new JMenuItem("Close", 'c');
+        helpAboutItem = new JMenuItem("About", 'a');
         label = new JLabel("Select file to upload:");
         selectFileButton = new JButton("Select file");
         sendButton = new JButton("Send to TV");
@@ -51,6 +61,14 @@ public class GoPresentation extends JFrame implements ActionListener {
         checkTeamB = new JCheckBox("TV for team B");
         checkTeamC = new JCheckBox("TV for team C");
         checkTeamD = new JCheckBox("TV for team D");
+        
+        setJMenuBar(menuBar);
+        fileTab.add(fileCloseItem);
+        helpTab.add(helpAboutItem);
+        menuBar.add(fileTab);
+        menuBar.add(helpTab);
+        fileCloseItem.addActionListener(this);
+        helpAboutItem.addActionListener(this);
         
         label.setBounds(10, 10, 150, 25);
         selectFileButton.setBounds(160, 10, 100, 20);
@@ -129,9 +147,39 @@ public class GoPresentation extends JFrame implements ActionListener {
                 String ipTeamB = "IP B";
                 String ipTeamC = "IP C";
                 String ipTeamD = "IP D";
-                JOptionPane.showMessageDialog(instance, "Trying to send...", "Connecting...", JOptionPane.OK_OPTION);
-                //new ConnectToServer(ipTeam, filePath); //(String, String)
+                NewThread newThread = new NewThread(ipTeamA, filePath.getText()); //(String, String)
+                newThread.start();
             }
+        }
+        
+        if(source == fileCloseItem){ dispose(); }
+        if(source == helpAboutItem){
+            String str = 
+                    "<html>" +
+                    "<table border=0>" +
+                        "<tr>" +
+                            "<td><font size=2><font color=red> Name: </font></td>" +
+                            "<td><font size=2><font color=black> GoPresentation </font></td>" + 
+                        "</tr>" +
+                        "<tr>" +
+                            "<td><font size=2><font color=red> Version: </font></td>" +
+                            "<td><font size=2><font color=black> 1.0.0 </font></td>" + 
+                        "</tr><hr>" +
+                        "<tr>" +
+                            "<td><font size=2><font color=red> Author: </font></td>" +
+                            "<td><font size=2><font color=black> Łukasz O. </font></td>" + 
+                        "</tr>" +
+                        "<tr>" +
+                            "<td><font size=2><font color=red> E-mail: </font></td>" +
+                            "<td><font size=2><font color=black> lxxxxxx@xxxxxxxx.com </font></td>" + 
+                        "</tr>" +
+                        "<tr>" +
+                            "<td><font size=2><font color=red> Mobile phone: </font></td>" +
+                            "<td><font size=2><font color=black> +48 728 XXX XXX </font></td>" + 
+                        "</tr>" +
+                    "</table>" +
+                    "</htm>";
+            JOptionPane.showMessageDialog(instance, str, "About", JOptionPane.NO_OPTION);
         }
             
         if(source == selectFileButton){
