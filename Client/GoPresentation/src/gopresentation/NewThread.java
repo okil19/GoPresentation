@@ -14,6 +14,7 @@ public class NewThread extends Thread{
         path = pathToFile;
     }
     public void run(){
-        System.out.println(path); //For test
+        new SendFile(ip, path);
+        System.out.println(path + " - " + ip); // test
     }
 }

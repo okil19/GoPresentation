@@ -3,7 +3,6 @@ package gopresentation;
 
 import java.awt.Container;
 import java.awt.FileDialog;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -36,7 +35,7 @@ public class GoPresentation extends JFrame implements ActionListener {
     public JButton unclickAllCheckBox;
     public FileDialog uploadFile;
     public JTextField filePath;
-    public String typeFile;
+    public String typeFile, previousFile, previousDirectory;
     public JCheckBox checkTeamA;
     public JCheckBox checkTeamB;
     public JCheckBox checkTeamC;
@@ -135,8 +134,10 @@ public class GoPresentation extends JFrame implements ActionListener {
             boolean stepOne = true;
             boolean stepTwo = true;
             if(typeFile == null){
-                JOptionPane.showMessageDialog(instance, "No file selected.", "Info", JOptionPane.OK_OPTION);   
-                stepOne = false;
+                if(filePath.getText().equals("No file selected")){
+                    JOptionPane.showMessageDialog(instance, "No file selected.", "Info", JOptionPane.OK_OPTION);   
+                    stepOne = false;
+                }
             }
             if(!(checkTeamA.isSelected() || checkTeamB.isSelected() || checkTeamC.isSelected() || checkTeamD.isSelected())){
                 JOptionPane.showMessageDialog(instance, "Select at least one TV.", "Info", JOptionPane.OK_OPTION);
@@ -147,8 +148,10 @@ public class GoPresentation extends JFrame implements ActionListener {
                 String ipTeamB = "IP B";
                 String ipTeamC = "IP C";
                 String ipTeamD = "IP D";
-                NewThread newThread = new NewThread(ipTeamA, filePath.getText()); //(String, String)
-                newThread.start();
+                if(checkTeamA.isSelected()) new NewThread(ipTeamA, filePath.getText()).start();
+                if(checkTeamB.isSelected()) new NewThread(ipTeamB, filePath.getText()).start();
+                if(checkTeamC.isSelected()) new NewThread(ipTeamC, filePath.getText()).start();
+                if(checkTeamD.isSelected()) new NewThread(ipTeamD, filePath.getText()).start();
             }
         }
         
@@ -187,8 +190,10 @@ public class GoPresentation extends JFrame implements ActionListener {
             uploadFile.setBounds(180, 10, 50, 25);
             uploadFile.setVisible(true);
             typeFile = uploadFile.getFile();
-            if(typeFile != null)
+                 
+            if(typeFile != null){
                 filePath.setText(uploadFile.getDirectory() + uploadFile.getFile());
+            }
         }
         
         if(source == clickAllCheckBox){
