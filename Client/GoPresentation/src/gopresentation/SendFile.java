@@ -1,15 +1,49 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gopresentation;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.nio.channels.SocketChannel;
 
 /**
  *
  * @author lokla
  */
 public class SendFile {
-    public SendFile(String ip, String file){}
+    public SocketChannel socketChannel;
+    public static final int PORT = 64000;
+    public String file;
     
+    public SendFile(String ip, String f){
+        file = convertPath(f); 
+        //socketChannel = openChannel(ip);
+        //sendFile(socketChannel, file);
+        
+        System.out.println(file + " - " + ip); // test
+    }
+    
+    public String convertPath(String f){
+        return f.replaceAll("\\\\", "\\\\\\\\");
+    }
+
+    public SocketChannel openChannel(String ip) {
+        SocketAddress socketAddress;
+        socketChannel = null;
+        ip = "localhost";
+        try{
+            socketChannel = SocketChannel.open();
+            socketAddress = new InetSocketAddress(ip, PORT);
+            socketChannel.connect(socketAddress);
+        }catch(IOException e){
+            e.printStackTrace();
+            System.out.println("No connection");
+        }
+        
+        return socketChannel;
+    }
+    
+    public void sendFile(SocketChannel sc, String f) {
+        // to be continue...
+    }
 }
