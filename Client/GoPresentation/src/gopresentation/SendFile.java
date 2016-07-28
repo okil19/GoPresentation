@@ -1,10 +1,17 @@
 
 package gopresentation;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.channels.SocketChannel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,8 +24,8 @@ public class SendFile {
     
     public SendFile(String ip, String f){
         file = f.replaceAll("\\\\", "\\\\\\\\"); 
-        //socketChannel = openChannel(ip);
-        //sendFile(socketChannel, file);
+        socketChannel = openChannel(ip);
+        sendFile(socketChannel, file);
         
         System.out.println(file + " - " + ip); // test
     }
@@ -39,7 +46,28 @@ public class SendFile {
         return socketChannel;
     }
     
-    public void sendFile(SocketChannel sc, String f) {
-        // to be continue...
+    public void sendFile(SocketChannel sc, String f){
+        RandomAccessFile raf = null;
+        try{
+            File fileToSend = new File(f);
+            raf = new RandomAccessFile(fileToSend, "r");
+            FileChannel inputChannel = raf.getChannel();
+            ByteBuffer buffer = ByteBuffer.allocate(1024);
+            while(inputChannel.read(buffer) > 0){
+                buffer.flip();
+                sc.write(buffer);
+                buffer.clear();
+            }
+            Thread.sleep(1000);
+            System.out.println("End of file reached..");
+            sc.close();
+            raf.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SendFile.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
