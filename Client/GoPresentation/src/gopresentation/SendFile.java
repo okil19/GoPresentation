@@ -16,15 +16,11 @@ public class SendFile {
     public String file;
     
     public SendFile(String ip, String f){
-        file = convertPath(f); 
+        file = f.replaceAll("\\\\", "\\\\\\\\"); 
         //socketChannel = openChannel(ip);
         //sendFile(socketChannel, file);
         
         System.out.println(file + " - " + ip); // test
-    }
-    
-    public String convertPath(String f){
-        return f.replaceAll("\\\\", "\\\\\\\\");
     }
 
     public SocketChannel openChannel(String ip) {
