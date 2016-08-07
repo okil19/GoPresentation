@@ -8,8 +8,10 @@ import java.io.RandomAccessFile;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,13 +55,29 @@ public class SendFile {
             raf = new RandomAccessFile(fileToSend, "r");
             FileChannel inputChannel = raf.getChannel();
             ByteBuffer buffer = ByteBuffer.allocate(1024);
+            
+            //sending filename...
+            int i = f.lastIndexOf("\\\\");
+            f = f.substring(i+2);
+            Charset charset = Charset.forName("ISO-8859-1");
+            CharBuffer charBuffer = CharBuffer.wrap(f);
+            ByteBuffer byteBuffer = charset.encode(charBuffer);
+            byteBuffer.compact();
+            byteBuffer.flip();
+    
+            while (byteBuffer.hasRemaining())
+            {
+                sc.write(byteBuffer);
+            }
+            Thread.sleep(1000);
+            
+            //sending file...
             while(inputChannel.read(buffer) > 0){
                 buffer.flip();
                 sc.write(buffer);
                 buffer.clear();
             }
             Thread.sleep(1000);
-            System.out.println("End of file reached..");
             sc.close();
             raf.close();
         } catch (FileNotFoundException e) {
