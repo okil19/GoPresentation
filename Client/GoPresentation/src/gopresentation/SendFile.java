@@ -29,7 +29,7 @@ public class SendFile {
         socketChannel = openChannel(ip);
         sendFile(socketChannel, file);
         
-        System.out.println(file + " - " + ip); // test
+        System.out.println("File from: " + file + " Has been sent to: " + ip); // test
     }
 
     public SocketChannel openChannel(String ip) {

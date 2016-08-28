@@ -13,6 +13,7 @@ import java.nio.channels.SocketChannel;
 public class ListenerChannelThread extends Thread {
     public ServerSocketChannel serverSocketChannel;
     public SocketChannel socketChannel;
+    public final int PORT = 64000;
     
     public ListenerChannelThread(){
         serverSocketChannel = null;
@@ -22,7 +23,7 @@ public class ListenerChannelThread extends Thread {
     public void run(){
         try{
             serverSocketChannel = ServerSocketChannel.open();
-            serverSocketChannel.socket().bind(new InetSocketAddress(64000));
+            serverSocketChannel.socket().bind(new InetSocketAddress(PORT));
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -32,6 +33,7 @@ public class ListenerChannelThread extends Thread {
                 if(socketChannel.isConnected()){
                     ReceiveFile receiveFile = new ReceiveFile(socketChannel);
                     receiveFile.getAndSaveFile();
+                    System.out.println("New file has been received: " +receiveFile.name);
                 }
             }
         }catch(IOException e){
